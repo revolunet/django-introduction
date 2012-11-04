@@ -397,17 +397,19 @@ print user.has_perms(('app.add_company', 'app.change_company'))
             <pre class="prettyprint lang-django">
 # filters
 company : {{ company.name|upper|rot13 }}
-
 owner : {{ compagnie.owner|gravatar }}
-
 confirmed : {{ compagnie.confirmed|as_icon }}
 
 # tags
 {% latest_compagnie:10 %}
 
-{% rot13 %}
-this text will be translated in rot13
-{% endrot13 %}
+{% thumbnail company.logo "200x100" as im %}
+    &lt;img src="{{ im.url }}"&gt;
+{% endthumbnail %}
+
+{% googlemaps width:300 height:200 lat:company.lat lon:company.lon %}
+text to display in the marker
+{% endgooglemaps %}
             </pre>
       </article>
 
@@ -472,9 +474,9 @@ cache.delete('complex_data')
 
 
       <article>
-        <h1 class='pink bigger' >That's all folks !</h1>
+        <h1 class='pink bigger' style='margin-top:100px'>That's all folks !</h1>
         
-        <h2>
+        <h2 style='position:relative;margin-top:250px'>
         
           It's just a small part of Django<br><br>
           Discover more on djangoproject.com<br><br>
