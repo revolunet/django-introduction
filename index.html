@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+
+<!--
+  Google HTML5 slide template
+
+  Authors: Luke Mahé (code)
+           Marcin Wichary (code and design)
+           
+           Dominic Mazzoni (browser compatibility)
+           Charles Chen (ChromeVox support)
+
+  URL: http://code.google.com/p/html5slides/
+-->
+
+<html>
+  <head>
+    <title>Django inside</title>
+
+    <meta charset='utf-8'>
+    <script
+      src='slides.js'></script>
+  </head>
+  
+<style>
+    /* Your individual styles here, or just use inline styles if that’s
+       what you want. */
+    .slides.template-default > article:not(.nobackground):not(.biglogo) {
+      background: url(images/logolong-100.png) bottom right no-repeat !important;  
+      background-color: white !important;  
+    } 
+    h2.normal {
+      position:relative;
+      top:10px;
+    }
+    ul.numbered li {
+      list-style-type: decimal;
+    }
+    .pink {
+      color:#f06;
+    }
+    .djgreen {
+      color: #163f2e;
+    }
+    .nomargin {
+      margin:0px;
+    }
+    h1 {
+      margin-top:120px;
+    }
+
+    h1.bigger {
+      font-weight:bold;
+      font-size: 80px !important;
+    }
+    .centerv {
+     margin-top:200px; 
+    }
+    div.freeticket {
+      padding-top: 40px;
+    }
+    div.features {
+      padding-top: 20px;
+    }
+    div.features div {
+      list-style: none !important;
+      background: transparent url(images/freept.jpg) no-repeat;
+      padding-left:60px;
+      vertical-align: middle;
+      line-height:60px;
+      margin-bottom:20px;
+    }
+    div.freeticket div {
+      list-style: none !important;
+      background: transparent url(images/freept.jpg) no-repeat;
+      padding-left:60px;
+      vertical-align: middle;
+      line-height:60px;
+      margin-bottom:30px;
+    }
+  </style>
+
+
+  <body style='display: none'>
+
+    <section class='slides layout-regular template-default'>
+      
+      <!-- Your slides (<article>s) go here. Delete or comment out the
+           slides below. -->
+        
+        
+      <article style="text-align:center">
+        <h1 style='margin-top:30px;font-size:75px'>&nbsp;&nbsp;&nbsp;Discovering...</h1>
+        <br><br><br><br>
+        <img src="images/django-logo.png" width=400 />
+        <br><br><br><br><br>
+        <div style='font-size:18px'>@LaCantine, 05/11/2012</div>
+      </article>
+
+      <article>
+        <h1>About revolunet</h1>
+        <br>
+        <h2 class='normal'><span class='pink'>rich web apps</span>
+
+        for desktop & mobile</h2>
+        <br><br>
+        <p><img width=50 style="vertical-align:middle" src="images/twitter.png"/> @revolunet</p>
+        <p><img width=50  style="vertical-align:middle"  src="images/octocat.png"/> revolunet</p>
+      </article>
+
+      <article>
+        <h1>What makes Django</h1>
+        <h2 class='normal'> such an <span class='pink'>awesome</span> web framework ?</h2>
+        <p> </p>
+      </article>
+
+      <article>
+        <h1>
+          Written in Python
+        </h1>
+        <ul>
+          <li>Powerful syntax based on OOP</li>
+          <li>Huge and mature community</li>
+          <li>Interoperability</li>
+          <li>Productivity</li>
+          
+        </ul>
+      </article>
+
+      <article>
+        <h1>
+          The Django Project
+        </h1>
+        <ul>
+          <li>Well tested and documented</li>
+          <li>Fast evolution</li>
+          <li>+7 years old</li>
+          <li>Many builtin modules</li>
+          <li>Multitask : design once, deploy websites, mobiles API...</li>
+        </ul>
+      </article>
+
+      <article>
+        <h1 class='pink bigger' >ORM</h1>
+        <h2 class=normal >
+            <br>
+             Object Relational Mapping
+            <br><br>
+             Database-agnostic queries
+             <br><br>
+             = No SQL
+        </h2>
+      </article>
+
+      <article>
+        <br>
+        <h1 class="nomargin">Define your data <span class='pink bigger' >Model</span></h1>
+              <pre>
+class Company(models.Model):
+    name = models.CharField(max_length=100, unique=True,
+             verbose_name = "Company Name")
+    email = models.EmailField(null=True)
+    logo = models.ImageField(upload_to='company_logos')
+    created = models.DateTimeField(auto_now_add=True)
+    owner = models.ForeignKey(User)
+    confirmed = models.DateTimeField(null=True)
+    class Meta:
+      ordering = ['name', '-modified']
+</pre>
+        Django takes care of :
+        <ul class='nomargin' style='padding-left:20px;padding-top:10px'>
+          <li>Primary key, table creation and data validity</li>
+          <li>Default ordering when querying</li>
+        </ul>
+      </article>
+
+      <article>
+        <br>
+        <h1 class="nomargin">And you'll get <span class='pink' >for free :</span></h1>
+        
+        <div class=' freeticket' >
+            <div>Easy ORM queries</div>
+            <div>Customisable CRUD Admin interface</div>
+            <div>Automatic form generation & validation</div>
+            <div>Generic views : paginated lists, detail...</div>
+            <div>Json/Xml/Yaml serialization</div>
+        </div>
+      </article>
+
+      <article>
+        <h1 class="nomargin">Sample ORM queries</h1>
+              <pre>
+# all compagnies
+print Company.objects.all()
+
+print Company.objects.all()[:5] # first 5 only
+
+# a single company
+gg = Company.objects.get(name='Google')
+gg.url = 'http://www.google.com'
+gg.save()
+
+# simple query
+last_week = datetime.datetime.today() - datetime.timedelta(days=7)
+recent_compagnies =  Company.objects.filter(confirmed__gte=last_week)
+
+# re-use queryset
+recent_megas = recent_compagnies.filter(name__istartswith='MEGA')
+with_email_only = recent_megas.exclude(email__isnull=True)</article>
+      <article>
+        
+        <h1 class="nomargin">Extending <span class='pink' >models</span></h1>
+        <br>
+        Add your own model methods or overrides defaults
+              <pre>
+class Company(models.Model):
+    [...]
+    confirmed = models.DateTimeField(null=True)
+
+    def send_confirmation(self):    # custom method
+        msg = "Dear %s owner, You've been elected to
+                sponsor the Django party" % self.name.upper()
+        send_mail('Hi!', msg, 'admin@test.com', [self.user.email])
+        self.confirmed = datetime.datetime.now()
+        self.save()
+
+    def save(self, *args, **args):    # override default save
+        log.info('Company %s has need updated' % self.name)
+        super(Company, self).save(*args, **kwargs)
+</pre>
+      </article>
+
+      <article>
+        <h1 class="nomargin">More with the <span class='pink' >ORM :</span></h1>
+        <br>
+        <div class=' features' >
+            <div>Create your own custom fields and widgets</div>
+            <div>Use models managers to handle groups of objects</div>
+            <div>Use multiple databases together</div>
+            <div>Use transactions</div>
+            <div>Use fixtures</div>
+            <div>Expose your models via REST (tastypie module)</div>
+        </div>
+      </article>
+
+      <article>
+        <h1 class='pink bigger' >Users & groups</h1>
+        <h2 class=normal >
+            <br>
+             Builtin management
+            <br><br>
+             Builtin processes
+             <br><br>
+             High security level
+        </h2>
+      </article>
+
+      <article>
+        <h1 class='nomargin' >User management for free</h1>
+        <br>
+        <div class=' freeticket' >
+            <div>Users, Groups, Permissions are Django Models</div>
+            <div>You can create your own permissions</div>
+            <div>Many management helpers included</div>
+            <div>Password change/reset procedures included</div>
+        </div>
+      </article>
+
+      <article>
+        <h1 class='nomargin' >Example User usage</h1>
+              <pre>
+# create user
+pwd = 'VeryComplexPassword'
+new_user = User.create_user('Johnny', 'jon@gmail.com', password=pwd)
+new_user.is_staff = True
+new_user.save()
+
+# authenticate and login user
+def login_view(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(username=username, password=password)
+
+    if user is not None and user.is_active:
+        login(request, user) # create session
+        return HttpResponseRedirect(reverse('home'))
+
+    return HttpResponseForbidden('sorry, cannot authenticate')
+
+</pre>
+</article>
+
+      <article>
+        <h1 class='nomargin' >Example Permissions usage</h1>
+              <pre class="">
+# add user to some group
+group_editors = Group.objects.get(name='Editors')
+new_user.groups.add(group_editors)
+new_user.save()
+
+# check if user is authenticated
+print user.is_authenticated()     # or user.is_anonymous()
+
+# check permissions
+print user.has_perm('app.add_company')
+print user.has_perms(('app.add_company', 'app.change_company'))
+</pre><pre class="prettyprint lang-django">
+# also from your templates :
+{% if user.is_authenticated %}
+    Welcome, {{ user.username }}. Thanks for logging in.
+{% else %}
+    Welcome, new user. Please log in.
+{% endif %}
+</pre>
+      </article>
+
+      <article>
+        <h1 class='pink bigger' >Builtin templates</h1>
+        <h2 class=normal >
+            <br>
+             Separation of code & presentation
+            <br><br>
+             Blocks inheritance
+             <br><br>
+             Tags & filters
+        </h2>
+      </article>
+
+      <article>
+        <h1 class='nomargin' >Template inheritance (1/2)</h1>
+            <pre class="prettyprint lang-django">
+# base.html
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;{% block title %}My Awesome website{% endblock %}&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    {% include "menu.html" %}
+
+    {% block content %}Main page content{% endblock %}
+
+    &lt;footer&gt;
+      &lt;a href=&quot;{% url "contact" %}&quot;&gt;contact&lt;/a&gt; |
+      &lt;a href=&quot;{% url "legal" %}&quot;&gt;legal&lt;/a&gt;
+    &lt;/footer&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+      </article>
+
+      <article>
+        <h1 class='nomargin' >Template inheritance (2/2)</h1>
+            <pre class="prettyprint lang-django">
+# homepage.html
+{% extends "base.html" %}
+
+{% block title %}Welcome to my website{% endblock %}
+
+{% block content %}
+  Welcome !
+  &lt;div class="compagnies"&gt;
+    {% if companies %}
+      Sorry, no companies confirmed yet
+    {% else %}
+      {% for company in companies %}
+        &lt;div class="name"&gt;{{ company.name }}&lt;/div&gt;
+      {% endfor %}
+    {% endif %}
+  &lt;/div&gt;
+{% endblock %}</pre>
+      </article>
+
+      <article>
+        <h1 class='nomargin' >Templates tags & filters</h1>
+            <pre class="prettyprint lang-django">
+# homepage.html
+{% extends "base.html" %}
+
+{% block title %}Welcome to my website{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        Welcome {{ user.username|upper }} !
+        We know you since {{ user.date_joined|timesince }}
+
+        {% include "welcome.html" %}
+
+        {% for company in companies %}
+            &lt;tr class=&quot;{% cycle 'odd' 'even' %}&quot;&gt;[...]&lt;/tr&gt;
+        {% endfor %}
+    {% endif %}
+{% endblock %}</pre>
+      </article>
+
+      <article>
+        <h1 class='nomargin' >Custom tags & filters</h1>
+        You can easily add your own tags and filters
+            <pre class="prettyprint lang-django">
+# filters
+company : {{ company.name|upper|rot13 }}
+
+owner : {{ compagnie.owner|gravatar }}
+
+confirmed : {{ compagnie.confirmed|as_icon }}
+
+# tags
+{% latest_compagnie:10 %}
+
+{% rot13 %}
+this text will be translated in rot13
+{% endrot13 %}
+            </pre>
+      </article>
+
+      <article>
+        <h1 class='pink bigger' >Builtin caching</h1>
+        <h2 class=normal >
+            <br>
+             Easy to setup and use
+            <br><br>
+             Available everywhere
+             <br><br>
+             Support various backends : Memcache, Database, Disk, Redis...
+        </h2>
+      </article>
+
+      <article>
+        <h1 class='nomargin pink' >Caching is easy</h1>
+        <pre>
+# cache views:
+@cache_page(60 * 15)
+def home(request):
+  return HttpResponse('this will be cached 15 minutes')
+
+# get/store value in cache for 60sec.
+result = cache.get('complex_data'):
+if not result:
+    result = compute_complex()
+    cache.set('complex_data', result, 60)
+return result
+
+# manipulate
+cache.incr('complex_data')
+cache.incr('complex_data', 10)
+cache.delete('complex_data')
+
+</pre>
+
+      </article>
+
+      <article>
+        <h1 class='nomargin pink' >Caching in templates too</h1>
+        <pre>
+{% load cache %}
+
+# cached for everybody
+{% cache 500 sidebar %}
+    .. sidebar ..
+{% endcache %}
+
+# cached per user
+{% cache 500 sidebar request.user.username %}
+    .. sidebar for user..
+{% endcache %}
+
+# nested cache
+{% cache 500 sidebar request.user.username %}
+    .. sidebar for user..
+    {% cache 3600 commonbar %}this doesnt change often{% endcache %}
+{% endcache %}
+        </pre>
+      </article>
+
+
+      <article>
+        <h1 class='pink bigger' >That's all folks !</h1>
+        
+        <h2>
+        
+          It's just a small part of Django<br><br>
+          Discover more on djangoproject.com<br><br>
+          Ask on twitter or #django-fr
+        </h2>
+      </article>
+
+
+      <article>
+        <h1 style='font-size:100px;margin-top:50px' align=center >Questions ?</h1>
+        <p align=center ><br><br>
+          <img src='images/beer.jpeg'/>
+        </p>
+      </article>
+
+
+
+
+    </section>
+
+  </body>
+</html>
