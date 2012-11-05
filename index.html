@@ -224,20 +224,19 @@ class Company(models.Model):
         self.save()
 
     def save(self, *args, **args):    # override default save
-        log.info('Company %s has need updated' % self.name)
+        log.info('Company %s has been updated' % self.name)
         super(Company, self).save(*args, **kwargs)
 </pre>
       </article>
 
       <article>
         <h1 class="nomargin">More with the <span class='pink' >ORM :</span></h1>
-        <br>
+        <br><br>
         <div class=' features' >
             <div>Create your own custom fields and widgets</div>
             <div>Use models managers to handle groups of objects</div>
             <div>Use multiple databases together</div>
             <div>Use transactions</div>
-            <div>Use fixtures</div>
             <div>Expose your models via REST (tastypie module)</div>
         </div>
       </article>
@@ -329,6 +328,7 @@ print user.has_perms(('app.add_company', 'app.change_company'))
         <h1 class='nomargin' >Template inheritance (1/2)</h1>
             <pre class="prettyprint lang-django">
 # base.html
+&lt;!DOCTYPE html&gt;
 &lt;html&gt;
   &lt;head&gt;
     &lt;title&gt;{% block title %}My Awesome website{% endblock %}&lt;/title&gt;
@@ -343,8 +343,7 @@ print user.has_perms(('app.add_company', 'app.change_company'))
       &lt;a href=&quot;{% url "legal" %}&quot;&gt;legal&lt;/a&gt;
     &lt;/footer&gt;
   &lt;/body&gt;
-&lt;/html&gt;
-            </pre>
+&lt;/html&gt;</pre>
       </article>
 
       <article>
@@ -359,7 +358,7 @@ print user.has_perms(('app.add_company', 'app.change_company'))
   Welcome !
   &lt;div class="compagnies"&gt;
     {% if companies %}
-      Sorry, no companies confirmed yet
+      Sorry, no companies registered yet
     {% else %}
       {% for company in companies %}
         &lt;div class="name"&gt;{{ company.name }}&lt;/div&gt;
@@ -408,7 +407,7 @@ confirmed : {{ compagnie.confirmed|as_icon }}
 {% endthumbnail %}
 
 {% googlemaps width:300 height:200 lat:company.lat lon:company.lon %}
-text to display in the marker
+text to display in the google maps marker
 {% endgooglemaps %}
             </pre>
       </article>
@@ -438,7 +437,6 @@ result = cache.get('complex_data'):
 if not result:
     result = compute_complex()
     cache.set('complex_data', result, 60)
-return result
 
 # manipulate
 cache.incr('complex_data')
@@ -456,17 +454,17 @@ cache.delete('complex_data')
 
 # cached for everybody
 {% cache 500 sidebar %}
-    .. sidebar ..
+    ..sidebar contents..
 {% endcache %}
 
 # cached per user
 {% cache 500 sidebar request.user.username %}
-    .. sidebar for user..
+    ..sidebar contents for given user..
 {% endcache %}
 
 # nested cache
 {% cache 500 sidebar request.user.username %}
-    .. sidebar for user..
+    ..sidebar contents for given user..
     {% cache 3600 commonbar %}this doesnt change often{% endcache %}
 {% endcache %}
         </pre>
