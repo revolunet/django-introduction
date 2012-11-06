@@ -164,7 +164,7 @@ class Company(models.Model):
     owner = models.ForeignKey(User)
     confirmed = models.DateTimeField(null=True)
     class Meta:
-      ordering = ['name', '-modified']
+        ordering = ['name', '-modified']
 </pre>
         Django takes care of :
         <ul class='nomargin' style='padding-left:20px;padding-top:10px'>
@@ -204,7 +204,7 @@ last_week = datetime.datetime.today() - datetime.timedelta(days=7)
 recent_compagnies =  Company.objects.filter(confirmed__gte=last_week)
 
 # re-use queryset
-recent_megas = recent_compagnies.filter(name__istartswith='MEGA')
+recent_megas = recent_compagnies.filter(name__startswith='MEGA')
 with_email_only = recent_megas.exclude(email__isnull=True)</article>
       <article>
         
@@ -217,13 +217,13 @@ class Company(models.Model):
     confirmed = models.DateTimeField(null=True)
 
     def send_confirmation(self):    # custom method
-        msg = "Dear %s owner, You've been elected to
-                sponsor the Django party" % self.name.upper()
+        msg = "Dear %s owner, You've been elected to "
+                "sponsor the Django party" % self.name.upper()
         send_mail('Hi!', msg, 'admin@test.com', [self.user.email])
         self.confirmed = datetime.datetime.now()
         self.save()
 
-    def save(self, *args, **args):    # override default save
+    def save(self, *args, **kwargs):    # override default save
         log.info('Company %s has been updated' % self.name)
         super(Company, self).save(*args, **kwargs)
 </pre>
@@ -269,7 +269,7 @@ class Company(models.Model):
               <pre>
 # create user
 pwd = 'VeryComplexPassword'
-new_user = User.create_user('Johnny', 'jon@gmail.com', password=pwd)
+new_user = User.objects.create_user('Johnny', 'jon@gmail.com', password=pwd)
 new_user.is_staff = True
 new_user.save()
 
@@ -400,7 +400,7 @@ owner : {{ compagnie.owner|gravatar }}
 confirmed : {{ compagnie.confirmed|as_icon }}
 
 # tags
-{% latest_compagnie:10 %}
+{% latest_compagnie 10 %}
 
 {% thumbnail company.logo "200x100" as im %}
     &lt;img src="{{ im.url }}"&gt;
