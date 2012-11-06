@@ -357,7 +357,7 @@ print user.has_perms(('app.add_company', 'app.change_company'))
 {% block content %}
   Welcome !
   &lt;div class="compagnies"&gt;
-    {% if companies %}
+    {% if not companies %}
       Sorry, no companies registered yet
     {% else %}
       {% for company in companies %}
